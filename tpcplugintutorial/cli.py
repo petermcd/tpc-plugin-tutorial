@@ -1,46 +1,40 @@
-from netmiko import ConnectHandler
-from getpass import getpass
-from netmiko.exceptions import NetmikoAuthenticationException, NetmikoTimeoutException
+"""Entry point for tpcplugintututorial."""
+import argparse
+import ipaddress
 
-FAILURE_CONNECTION = "Failed to connect"
-FAILURE_LOGIN = "Unable to login"
+from tpcplugintutorial import platforms
 
-ip = "192.168.1.161"
 username = "root"
 password = "zBGBceeYgPA93bANMpqO"
 
-try:
-    net_connect = ConnectHandler(
-        device_type="linux",
-        host=ip,
-        username=username,
-        password=password,
+
+def arguments():
+    """Configure application arguments."""
+    parser = argparse.ArgumentParser(
+                        prog='TPC Plugin Tutorial',
+                        description='Demo application to verify and change credentials on devices',
     )
-except NetmikoTimeoutException as exc:
-    print(FAILURE_CONNECTION)
-    exit(1)
-except NetmikoAuthenticationException as exc:
-    print(FAILURE_LOGIN)
+    parser.add_argument('--ip', action='store', required=True,)
+    parser.add_argument('--device-type', action='store', required=True,)
+    parser.add_argument('--action', choices=['verifypass', 'changepass', 'prereconcile', 'reconcile'], required=True,)
+    return parser.parse_args()
+
+
+def main() -> None:
+    """Entry point for the application."""
+    args = arguments()
+    try:
+        if hasattr(platforms, args.device_type):
+            ip = ipaddress.ip_address(args.ip)
+            platform = getattr(platforms, args.device_type)(ip=ip)
+            getattr(platform, args.action)()
+            return
+    except TypeError:
+        # Fall through as this may happen if the platform is in the wrong case.
+        pass
+    print('Platform not supported')
     exit(1)
 
-print(net_connect.find_prompt())
-cmd = net_connect.send_command_timing(
-    command_string='passwd',
-    strip_command=False,
-    strip_prompt=False
-)
-print(cmd)
-cmd2 = net_connect.send_command_timing(
-    command_string="zBGBceeYgPA93bANMpqO2",
-    strip_command=False,
-    strip_prompt=False,
-    last_read=2.0,
-)
-cmd2 = net_connect.send_command_timing(
-    command_string="zBGBceeYgPA93bANMpqO2",
-    strip_command=False,
-    strip_prompt=False,
-    last_read=2.0,
-)
-print(cmd2)
-net_connect.disconnect()
+
+if __name__ == '__main__':
+    main()

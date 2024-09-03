@@ -1,0 +1,39 @@
+[project]
+name = 'tpcplugintutorial'
+description = 'Application to demonstrate how to create a TPC plugin for CyberArk.'
+keywords = ['CyberArk', 'TPC', 'security', 'credentials', 'password']
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+]
+readme = 'README.md'
+license = {file = 'LICENSE'}
+version = '0.0.1'
+authors = [{name = 'Peter McDonald'}]
+maintainers = [{name = 'Peter McDonald'}]
+requires-python = '>=3.11'
+dependencies = ['netmiko==4.4.0']
+
+[project.scripts]
+passwords = 'tpcplugintutorial.cli:main'
+
+[project.optional-dependencies]
+test = [
+    'flake8',
+    'isort',
+    'mypy',
+    'pytest',
+]
+
+[project.urls]
+Documentation = 'https://medium.com/p/a241a24c9cfb'
+Homepage = 'https://github.com/petermcd/tpc-plugin-tutorial'
+Issues = 'https://github.com/petermcd/tpc-plugin-tutorial/issues'
+Repository = 'https://github.com/petermcd/tpc-plugin-tutorial.git'
+
+[build-system]
+requires = ['setuptools', ]
+build-backend = 'setuptools.build_meta'
