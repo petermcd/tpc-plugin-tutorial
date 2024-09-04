@@ -12,6 +12,7 @@ class BasePlatform(object):
 
     __slots__ = (
         '_connection',
+        '_local_username',
         '_new_password',
         '_password',
         '_username',
@@ -24,11 +25,43 @@ class BasePlatform(object):
         Args:
             ip (IPv4Address | IPv6Address): IP address of the device to connect too.
         """
+        self._local_username: str = ''
+        self._new_password: str = ''
         self._username: str = ''
         self._password: str = ''
-        self._new_password: str = ''
         self._connection: BaseConnection | None = None
         self._connect(ip=ip)
+
+    @abstractmethod
+    def changepass(self) -> None:
+        """Abstract method for the changepass process."""
+
+    def logon(self) -> None:
+        """Handle the logon process."""
+        self.verifypass()
+
+    def prereconcilepass(self) -> None:
+        """
+        Handle the prereconcilepass process.
+
+        The prereconcilepass process matches the verify process but should log in with an alternate account.
+        """
+        self.verifypass()
+
+    @abstractmethod
+    def reconcilepass(self) -> None:
+        """Abstract method for the reconcilepass process."""
+
+    def verifypass(self) -> None:
+        """Handle the verifypass process."""
+        if not self._connection:
+            # Added to satisfy myoy
+            self._output_failure('We could not connect to the device.')
+
+        if self._connection.is_alive():  # type: ignore
+            self._output_success('verification successful')
+
+        self._output_failure('We could not connect to the device.')
 
     def _connect(self, ip: IPv4Address | IPv6Address) -> None:
         """
@@ -56,10 +89,6 @@ class BasePlatform(object):
         except Exception:
             # Handle every other exception.
             self._output_failure('We could not connect to the device.')
-
-    @abstractmethod
-    def changepass(self) -> None:
-        """Abstract method for the changepass process."""
 
     def _output_failure(self, message: str):
         """
@@ -91,18 +120,6 @@ class BasePlatform(object):
         print(message)
         exit(0)
 
-    @abstractmethod
-    def prereconcile(self) -> None:
-        """Abstract method for the prereconcile process."""
-
-    @abstractmethod
-    def reconcile(self) -> None:
-        """Abstract method for the reconcile process."""
-
-    @abstractmethod
-    def verifypass(self) -> None:
-        """Abstract method for the verifypass process."""
-
     @property
     @abstractmethod
     def device_type(self) -> str:
@@ -113,6 +130,21 @@ class BasePlatform(object):
             NotImplementedError: On failure to override this property.
         """
         raise NotImplementedError("device_type needs to be declared in the platform type class.")
+
+    @property
+    def local_username(self) -> str:
+        """
+        Property for the new password.
+
+        If the new password has not been retrieved yet, it will prompt for it, otherwise it will return what
+        it already has.
+
+        Returns:
+            new password as a string.
+        """
+        if not self._local_username:
+            self._local_username = input('Enter the local username: ')
+        return self._local_username
 
     @property
     def new_password(self) -> str:

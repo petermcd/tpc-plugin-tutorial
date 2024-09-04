@@ -4,9 +4,6 @@ import ipaddress
 
 from tpcplugintutorial import platforms
 
-username = "root"
-password = "zBGBceeYgPA93bANMpqO"
-
 
 def arguments():
     """Configure application arguments."""
@@ -16,7 +13,11 @@ def arguments():
     )
     parser.add_argument('--ip', action='store', required=True,)
     parser.add_argument('--device-type', action='store', required=True,)
-    parser.add_argument('--action', choices=['verifypass', 'changepass', 'prereconcile', 'reconcile'], required=True,)
+    parser.add_argument(
+        '--action',
+        choices=['logon', 'verifypass', 'changepass', 'prereconcilepass', 'reconcilepass'],
+        required=True,
+    )
     return parser.parse_args()
 
 
