@@ -1,6 +1,6 @@
 # TPC Plugin Tutorial
 
-This repository is to accompany this [medium article](https://medium.com/p/a241a24c9cfb)
+This repository is to accompany this [medium article](https://articles.petermcdonald.co.uk/how-to-write-a-custom-cyberark-tpc-plugin-using-python-a241a24c9cfb)
 
 The aim of the article is to show how a plugin that utilizing the custom Terminal Plugin Controller (TPC)
 platform for the CyberArk application.
