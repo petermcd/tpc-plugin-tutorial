@@ -15,7 +15,7 @@ This plugin can be installed using PIP using the following steps:
 On Windows (please read part two of the series to see how to install this for use with PSM)
 ```
 # Create a virtual environment
-python2.11 -m venv .venv
+python3.11 -m venv .venv
 . .venv/Scripta/Activate.exe
 
 # Update pip
@@ -28,8 +28,8 @@ pip install git+https://github.com/petermcd/tpc-plugin-tutorial.git
 On Linux/Mac (for development)
 ```
 # Create a virtual environment
-python2.11 -m venv .venv
-. .venv/Scripta/Activate.exe
+python3.11 -m venv .venv
+. .venv/bin/activate
 
 # Update pip
 .python.exe -m pip install pip
