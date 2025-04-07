@@ -29,7 +29,7 @@ On Linux/Mac (for development)
 ```
 # Create a virtual environment
 python3.11 -m venv .venv
-. .venv/Scripta/Activate.exe
+. .venv/bin/activate
 
 # Update pip
 .python.exe -m pip install pip
